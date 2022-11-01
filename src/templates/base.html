@@ -1,0 +1,182 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}</title>
+    <meta name="keywords" content="{% block keywords %}{% endblock keywords %}">
+    <meta name="description" content="{% block description %}{% endblock description %}">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico'%}" type="image/x-icon">
+    <script src="https://kit.fontawesome.com/24aa44fec3.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css'%}">
+    <style>
+      .li_st{
+        list-style:none;
+
+      }
+      .li_st:hover > ul{
+        display:block;
+      }
+
+    </style>
+    
+    {% block header %}
+    {% endblock header%}
+</head>
+<body class="bg-gray-200">
+     <!-- Header -->
+     
+ <header class="bg-gray-100 border-b border-b-gray-200">
+    <nav class="container mx-auto" >
+        <!--PC端 menu-->
+        <div class="flex justify-between mx-4 md:mx-0">
+            <div class="flex justify-between items-center">
+                <a class="mr-4 py-3" href="/"><img class="w-11 rounded-full"src="{% static 'img/login.jpg' %}" alt="Blog"></a>
+                <span><a href="/">阿红的个人博客</a></span>
+            </div> 
+            <div class="hidden md:flex items-center space-x-5">
+                <a class="py-5 px-3  text-blog-dary"href="/"><i class="fa fa-home px-1"></i> 首页</a>
+                <a class="py-5 px-3  text-blog-dary"href="{% url 'posts' %}"><i class="fa-solid fa-newspaper px-1"></i> 博文日志</a>
+                <a class="py-5 px-3  text-blog-dary"href="{% url 'about' %}"><i class="fa-solid fa-user-tie px-1"></i> 关于我</a>
+                <li class="li_st">
+
+              
+                {% if request.session.username %}
+                     <a class="py-5 px-3 block items-center h-full  text-blog-dary"href="{% url 'login' %}"><i class="fa-solid fa-circle-user px-1"></i>{{request.session.username}}</a>
+                     <ul class="relative hidden">
+                        <li class=" bg-gray-100 px-4 py-2 row absolute  rounded-lg "><a class=" text-blog-dary hover:text-black "a href="{% url 'logout' %}">退出</a></li>
+                    </ul>
+                {% else %}
+                   
+                    <a class="py-5 px-3 block items-center h-full  text-blog-dary"href="{% url 'login' %}"><i class="fa-solid fa-circle-user px-1"></i> 登录/注册</a>
+                {% endif %}
+  
+                    
+                    
+                   
+                </li>
+                
+            </div>
+            <div class="hidden md:flex items-center space-x-4">
+                <form action="{% url 'post_search' %}">
+                    <div class="relative text-blog-dary">
+                        <input class="bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none"type="search" name="q" id="q" value = "{{request.GET.q}}" autocomplete="false" placeholder="搜索">
+                        <botton class="absolute right-0 top-0 mt-3 mr-4" type="submit"><img class="w-4 h-4" src="{% static 'img/search.svg'%}" alt="Search"></botton>
+                    </div>
+                </form>
+
+                <div>
+                    <a href="/admin/core/post/add/" class="bg-blog-dary text-white text-sm py-2 px-4 rounded-full hover:bg-secondary"><i class="fa fa-keyboard mr-2"></i>写文章</a>
+                </div>
+                
+            </div>
+            <!--移动端 汉堡按钮-->
+            <div class="md:hidden flex items-center">
+                <button class="mobile-menu-button"><i class="fa fa-bars text-2xl"></i></button>
+            </div>
+           
+     
+        </div>
+
+        <!--移动端 menu-->
+        <div class="mobile-menu hidden md:hidden">
+         <a class="block py-2 px-4 text-sm hover:bg-blog-dary hover:text-white"href="/">首页</a>
+         <a class="block py-2 px-4 text-sm hover:bg-blog-dary hover:text-white"href="{% url 'posts' %}">博客日志</a>
+         <a class="block py-2 px-4 text-sm hover:bg-blog-dary hover:text-white"href="{% url 'about' %}">关于我</a>
+         <a class="block py-2 px-4 text-sm hover:bg-blog-dary hover:text-white"href="{% url 'login' %}">登陆</a>
+        </div> 
+    </nav>
+    
+</header>
+
+
+
+    {% block breadcrumb %}
+    <!--面包屑导航-->
+<nav class="py-3 px-5 text-blog-dary bg-gray-50">
+    <div class="container px-2">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3  text-sm">
+            <li><a href="#"><i class="fa fa-home"></i>首页</a></li>
+            <li><a href="#"><i class="fa fa-chevron-right mr-2"></i>博客日志</a></li>
+            <li><i class="fa fa-chevron-right mr-2"></i><span class="text-gray-500">列表</span> </li>
+        </ol>
+    </div>
+</nav>
+
+    {% endblock breadcrumb %}
+
+    {% block content %}
+    {% endblock content %}
+
+    <!--footer 页脚-->
+   {% block footer %} 
+   <footer class=" bg-blog-dary">
+    <div class="container hidden md:block">
+        <div class="flex  justify-between space-x-4 pt-10 pb-5 font-light text-gray-300">
+    
+            <div class="w-1/4">
+                <div class="flex items-center space-x-4 ">
+                    <a href="/">
+                        <img class="w-16 rounded-full"src="{% static 'img/login.jpg'%}" alt="">
+                    </a>
+                    <span>阿红的个人博客</span>
+                </div>
+                <p class="mt-4">{{BIO|safe}} </p>
+            </div>
+            <div class="w-1/4">
+                <h4 class="font-bold mb-3">最新日志</h4>
+                <ul class="space-y-1">
+                    {% for item in LATEST_POSTS %}
+                   <li><a href="{{item.get_absolute_url}}"><i class="fa fa-chevron-right mr-2"></i>{{item.title}}</a></li>
+                   {% endfor %}
+                </ul>
+    
+            </div>
+            <div class="w-1/4">
+                <h4 class="font-bold mb-3">推荐阅读</h4>
+                <ul class="space-y-1">
+                    {% for item in CHOSE_POSTS %}
+                   <li><a href="{{item.get_absolute_url}}"><i class="fa fa-chevron-right mr-2"></i>{{item.title}}</a></li>
+                   {% endfor %}
+                </ul>
+    
+            </div>
+            <div class="w-1/4">
+                <h4 class="font-bold mb-3">友情链接</h4>
+                <ul class="space-y-1">
+                   <li><a href="#"><i class="fa fa-chevron-right mr-2"></i>黄家辉的个人网站</a></li>
+                   <li><a href="#"><i class="fa fa-chevron-right mr-2"></i>马陆骞的个人网站</a></li>
+                   <li><a href="#"><i class="fa fa-chevron-right mr-2"></i>RE的个人网站</a></li>
+                   <li><a href="#"><i class="fa fa-chevron-right mr-2"></i>Hter的个人网站</a></li> 
+                </ul>
+    
+            </div>
+            
+        </div>
+    
+    
+    </div>
+    <div class="py-3 bg-black text-center text-sm text-white">
+        <p> Copyright &copy; 2022 阿红的个人博客 版权所有 </p>
+       
+    </div>
+    </footer>
+ 
+   {% endblock footer %}
+
+    {% block scripts %}
+    {% endblock scripts %}
+   
+
+</body>
+<script>
+    //切换显示移动端菜单导航
+    const btnBurger = document.querySelector("button.mobile-menu-button");
+    const menuMobile = document.querySelector(".mobile-menu");
+    btnBurger.addEventListener("click",()=>{
+        menuMobile.classList.toggle("hidden");
+    });
+</script>
+</html> 

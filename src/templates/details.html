@@ -1,0 +1,174 @@
+{% extends 'base.html'%}
+{% load static %}
+{% load core_extras %}
+{% block title %}{{item.title}}{% endblock title %}
+{% block keyswords %}
+{% for tag in item.tags.all %}{{tag}},{% endfor %}
+{% endblock keyswords %}
+{% block breadcrumb %}
+  <!--面包屑导航-->
+  <nav class="py-3 px-5 text-blog-dary bg-gray-50">
+    <div class="container px-2">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3  text-sm">
+            <li><a href="/"><i class="fa fa-home"></i>首页</a></li>
+            <li><a href="#"><i class="fa fa-chevron-right mr-2"></i>博客日志</a></li>
+            <li><i class="fa fa-chevron-right mr-2"></i><span class="text-gray-500">正文</span> </li>
+        </ol>
+    </div>
+</nav>
+{% endblock breadcrumb %} 
+{% block content %}
+<!--主体内容-->
+<main class="container my-4 flex flex-col md:flex-row items-start">
+
+    <div class="w-full bg-white p-4 md:w-3/4 md:mr-4 ">
+        <!--左边栏博客标题-->
+        <p><span class="bg-blog-dary text-white py-1 px-4 text-sm">{{item.category.name}}</span></p>
+
+        <h1 class="text-4xl font-light my-4 ">{{item.title}}</h1>
+         <!--左边栏博客发布时间-->
+        <div class="flex justify-between text-sm text-gray-500">
+
+            <div class="flex items-center space-x-4">
+                <img src="{% static 'img/login.jpg'%}" alt="{{item.author}}" class=" rounded-full w-7">
+                <span class="text-xl">{{item.author.first_name}}</span>
+                <span><i class="fa fa-clock"></i>{{item.created}}</span>
+            </div>
+
+            <div>
+                <span class="mr-4"><i class="fa-solid fa-thumbs-up"></i> 25</span>
+                <span class="mr-4"><i class="fas fa-comment"></i>{{item.comments.all|length}}</span>
+                <span class="mr-4"><i class="fa fa-eye"></i> {{item.views}}</span>
+            </div>
+            
+        </div>
+         <!--左边栏博客正文-->
+         <div class="my-6 space-y-4">
+            {% if item.img %}
+            <img src="{{item.img.url}}" alt="{{item.title}}">
+            {% endif %}
+            
+            <div class="my-4 ">
+                {{item.body|safe}}
+            </div>
+         </div> 
+
+         <!-- 文章标签 -->
+         <div class="my-4 border-y py-6 space-x-2 text-sm">
+            <span><i class="fas fa-tag">标签:</i></span>
+                {% for tag in item.tags.all %}
+                <span class="py-1 px-2 bg-blog-dary text-white uppercase"><a href="{% url 'posts' %}?tag={{tag.slug}}">{{tag}}</a></span>
+                {% endfor %}
+         </div>
+        <!-- 上一篇 下一篇 -->
+        <div class="my-6 flex flex-col md:flex-row justify-between">
+            <div class="flex w-full md:w-1/2 justify-between items-center space-x-2 md:border-r">
+                <div class="w-1/4">
+                   
+                    {% if prev_post.img  %}
+                    <img class="rounded-md" src="{{prev_post.img.url}}" alt="prev_post.title">
+                    {% endif %}
+            
+                </div>
+                <div class="w-3/4">
+                    <div class="text-sm"> <i class="fas fa-caret-left text-blog-dary"></i>上一篇</div>
+                    {% if prev_post %}
+                    <h4><a href="{{prev_post.get_absolute_url}}">{{prev_post.title}}</a></h4>
+                    {% else %}
+                    <h4>没有了</h4>
+                    {% endif %}
+                   
+                </div>
+            </div>
+            
+            <div class="flex w-full md:w-1/2 justify-between items-center space-x-2">
+                <div class="w-3/4 md:justify-end md:text-right">
+                    <div class="text-sm">下一篇 <i class="fas fa-caret-right text-blog-dary"></i></div>
+                    {% if next_post %}
+                    <h4><a href="{{next_post.get_absolute_url}}">{{next_post.title}}</a></h4>
+                    {% else %}
+                    <h4>没有了</h4>
+                    {% endif %}
+                   
+                </div>
+                <div class="w-1/4">
+                   
+                    {% if next_post.img %}
+                    <img class="rounded-md" src="{{next_post.img.url}}" alt="next_post.title">
+                    {% endif %}
+                </div>
+            </div>
+    
+        </div>
+        {% if request.session.username %}
+        <div class="my-6">
+            <div>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                   
+                    <p class="mb-2">
+                        {% comment %} <input class="border rounded-md p-2 text-sm" type="text" placeholder="姓名" name="name" id="name"> {% endcomment %}
+                        {{form.name}}
+                    </p>
+                    <p>
+                        {% comment %} <textarea class="w-full border rounded-md p-2 text-sm" name="body" id="body" cols="30" rows="3" placeholder="留下您的评论..."></textarea> {% endcomment %}
+                        {{form.body}}
+                    </p>
+                    <div class="text-right my-2">
+                        <input type="submit" value="提交" class="bg-blog-dary py-1 px-4 text-sm text-white rounded-full cursor-pointer">
+                        <input type="reset" value="取消" class="border py-1 px-4 text-sm rounded-full cursor-pointer">
+                    </div>  
+                </form>
+            </div>
+
+            {% else %}
+            <p class="text-xl space-x-4  text-blog-dary text-center  ">登陆才可评论哦！！！</p>
+            
+            {% endif %}
+
+
+            <h4 class="text xl border-b py-4 mb-4 "><span class="border-b-4 border-b-blog-dary py-4">精彩评论</span></h4>
+            {% for comment in item.comments.all %}
+            {% if comment.active %}
+            <div class="flex my-4 ">
+                <div class="mr-4">
+                    <img src="http://api.btstu.cn/sjtx/api.php"class="rounded-full w-11 " alt="{{comment.name}}">
+                </div> 
+                <div>
+                    <h4>{{comment.name}}</h4>
+                    <p class="text-sm space-x-4 "><span>{{comment.created}}</span><span>{{comment.ip}}</span></p>
+                    <p>{{comment.body}}</p>
+                    
+                    <hr>
+                </div>
+                
+            </div>
+
+            {% endif %}
+            {% endfor %}
+        </div>
+
+
+    </div>
+    <!--右边栏 -->
+    <div class="w-full bg-white p-2 md:w-1/4 ">
+        <!--天气 -->
+      {% weather %}
+        <!--文章分类-->
+      {% include 'core/categories.html' %}
+
+        <!-- 最新文章 Latest posts-->
+     {% include 'core/latest-posts.html' %}
+
+
+          <!-- 热门文章 popular posts-->
+     {% display_most_commented_posts %}
+
+        <!-- 热门标签 tags-->
+
+     {% display_tags %}
+
+
+    </div>
+  </main>
+{% endblock content %}

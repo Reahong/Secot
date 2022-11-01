@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load core_extras %}
+
+{% block header %} 
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"
+/>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+
+{% endblock header %}
+{% block title %}RE的个人网站{% endblock title %}
+{% block keyswords %}RE,阿红的个人博客,Python,编程,Django,技术分享{% endblock keyswords %}
+{% block description %}RE,阿红,日常技术分享,Python,Django...{% endblock description %}
+{% block breadcrumb %}
+{% endblock breadcrumb %}
+{% block content %}
+
+
+<!--轮播图-->
+<section class="container mx-auto mt-4 overflow-hidden">
+  <div id="slider" class="w-full h-[300px] md:h-full relative">
+    <div class="swiper-wrapper">
+      <!--轮播图列表项-->
+   {% for slide in slides %}
+       <div class="swiper-slide w-full relative">
+        <img class="w-full h-full object-cover " src="{{slide.img.url}}" alt="{{slide.title}}">
+        <div class="absolute top-1/3 md:left-20 left-2 font-light text-white">
+         <div class="text-4xl"> <a href="{{slide.link}}">{{slide.title}}</a></div>
+         <div class="text-2xl">{{slide.sub_title}}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-pagination"></div>
+  </div>
+    
+</section>
+
+
+<!--主体内容-->
+  <main class="container my-4 flex flex-col md:flex-row items-start">
+
+    <div class="w-full bg-white p-2 md:w-3/4 md:mr-4" >
+        <!--左边栏博客-->
+        {% for item in items %}
+        <div class="flex flex-col md:flex-row justify-between items-center mb-4 border-b-2 py-4 border-b-gray-100">
+            <div class="relative w-full md:w-1/4 md:mr-4 ">
+                {% if item.img %}
+                  <img class="object-cover w-full md:w-64" src="{{item.img.url}}" alt="{{item.title}}">
+                {% endif %}
+                <span class="absolute  text-white text-sm px-2 top-2 right-2">{{item.category.name}}</span>
+            </div>
+            <div class="md:w-3/4 mt-2 px-3">
+                <h3 class="texe-lg "><a href="{{item.get_absolute_url}}">{{item.title}}</a></h3>
+                <p class="text-sm mt-1"><i class="fa fa-clock"></i> {{item.created}}</p>
+                <p class="my-1 hidden">{{item.summary|safe}}</p>
+                 <div class="text-sm flex justify-between ">
+                    <div class="flex items-center justify-between space-x-4">
+                        <img class="rounded-full w-7" src="{{item.author.profile.avatar.url}}" alt="">
+                        <span class="text-blog-dary">{{item.author.profile.fullname}}</span>
+                    </div>
+                    <div class="flex space-x-4 py-1 px-1">
+                        <span><i class="fa-solid fa-thumbs-up"></i> 278</span>
+                        <span><i class="fa fa-comment"></i> {{item.comments.all|length}}</span>
+                        <span><i class="fa fa-eye"></i> {{item.views}}</span>
+                    </div>
+                 </div>
+            </div>
+      
+        </div>
+        {% endfor %}
+
+        <!--按钮跳转-->
+        <div class=" text-center my-6 py-4">
+            <a class="bg-blog-dary text-white py-3 px-8 rounded-md" href=" {% url 'posts' %}">查看所有文章 <i class="fa fa-angles-right"></i></a>
+
+        </div>
+    </div>
+    <!--右边栏 -->
+    <div class="w-full bg-white p-2 md:w-1/4 ">
+        <!--天气 -->
+        {% comment %} <div class="mb-8 w-full relative">
+            <img class="w-full" src="https://pic.netbian.com/uploads/allimg/180826/113958-153525479855be.jpg" 
+            style ="width:400px;height:200px;" alt="Weather">
+            <div class="absolute top-6 left-12 text-white">
+                <div class="text-xl mb-2">武汉天气</div>
+                <div class="text-4xl mb-2 font-light">晴</div>
+                <div class="text-2xl font-light">38℃</div>
+            </div>
+        </div> {% endcomment %}
+
+        {% weather %}
+        <!--文章分类-->
+        {% include 'core/categories.html' %}
+
+        <!-- 最新文章 Latest posts-->
+        {% include 'core/latest-posts.html' %}
+
+        
+
+          <!-- 热门文章 popular posts-->
+        {% display_most_commented_posts %}
+
+        <!-- 热门标签 tags-->
+
+      {% display_tags %}
+
+    </div>
+  </main>
+
+{% endblock content %}
+
+
+{% block scripts %} 
+<script src='https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.esm.browser.min.js'></script> 
+
+<script>
+  const swiper = new Swiper('#slider',{
+    loop: true,
+    autoplay: true,
+    speed: 500,
+    pagination:{
+      el:".swiper-pagination"
+    },
+    navigation:{
+      nextEl:".swiper-button-next",
+      prevEl:".swiper-button-prev"
+    }
+  })
+</script>
+{% endblock scripts %}

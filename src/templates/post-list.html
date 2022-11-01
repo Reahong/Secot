@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load core_extras %}
+{% block breadcrumb %}
+    <!--面包屑导航-->
+    <nav class="py-3 px-5 text-blog-dary bg-gray-50">
+        <div class="container px-2">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3  text-sm">
+                <li><a href="/"><i class="fa fa-home"></i>首页</a></li>
+                <li><a href="{% url 'posts' %}"><i class="fa fa-chevron-right mr-2"></i>博客日志</a></li>
+                <li><i class="fa fa-chevron-right mr-2"></i><span class="text-gray-500">列表</span> </li>
+            </ol>
+        </div>
+    </nav>
+
+{% endblock breadcrumb %}
+{% block content %}
+
+
+<!--主体内容-->
+  <main class="container my-4 flex flex-col md:flex-row items-start">
+    <div class="w-full bg-white p-2 md:w-3/4 md:mr-4">
+        <!--左边栏博客-->
+        <div class="w-full my-4 border-b-2 border-b-gray-400 hidden md:block">
+            <ul class ="flex items-center flex-row space-x-1">
+                 {% if not request.GET.cat %}
+                 <li class ="bg-blog-dary text-white py-1 px-3"><a href="{% url 'posts' %}">全部</a></li>
+                 {% else %}
+                 <li class ="bg-gray-400 text-white py-1 px-3"><a href="{% url 'posts' %}">全部</a></li>
+                 {% endif %}
+                 
+                 {% for cat in CATEGORIES %}
+                 {% if request.GET.cat == cat.id|to_str %}
+                 <li class ="bg-blog-dary text-white py-1 px-3"> <a href="?cat={{cat.id}}"> {{cat.name}}</a></li>
+                 {% else %}
+                 <li class ="bg-gray-400 text-white py-1 px-3"> <a href="?cat={{cat.id}}"> {{cat.name}}</a></li>
+                 {% endif %}
+                 
+                 {% endfor %}
+            </ul>
+        </div>
+        {% for item in items %}
+        <div class="flex flex-col md:flex-row justify-between items-center mb-4 border-b-2 border-b-gray-100  ">
+            <div class="relative w-full md:w-1/4 md:mr-4 py-1">
+                {% if item.img %}
+                  <img class="object-cover w-full md:w-64" src="{{item.img.url}}" alt="{{item.title}}">
+                {% endif %}
+                <span class="absolute  text-white text-sm px-2 top-2 right-2">{{item.category.name}}</span>
+            </div>
+            <div class="md:w-3/4 mt-2 py-2 ">
+                <h3 class="texe-lg "><a href="{{item.get_absolute_url}}">{{item.title}}</a></h3>
+                <p class="text-sm mt-1"><i class="fa fa-clock"></i> {{item.created}}</p>
+                <p class="my-1 hidden">{{item.summary|safe}}</p>
+                 <div class="text-sm flex justify-between ">
+                    <div class="flex items-center justify-between space-x-4">
+                        <img class="rounded-full w-7" src="{{item.author.profile.avatar.url }}" alt="">
+                        <span class="text-blog-dary">{{item.author.profile.fullname}}</span>
+                    </div>
+                    <div class="flex space-x-4 py-1 px-1">
+                        <span><i class="fa-solid fa-thumbs-up"></i> 278</span>
+                        <span><i class="fa fa-comment"></i>{{item.comments.all|length}}</span>
+                        <span><i class="fa fa-eye"></i> {{item.views}}</span>
+                    </div>
+                 </div>
+            </div>
+      
+        </div>
+        {% endfor %}
+
+
+
+        <!--分页按钮-->
+
+        <div class="container flex justify-center mx-auto py-4">
+            <ul class="flex" >
+                {% if items.has_previous %}
+                <li><a href="?page={{items.previous_page_number}}" class="align-middle h-10 py-2 px-5 rounded-md mx-6 text-blog-dary bg-white border border-blog-dary">前页</a></li>
+                {% endif %}
+                {% if items.has_next %}
+                <li><a href="?page={{items.next_page_number}}" class="align-middle h-10 py-2 px-5 rounded-md mx-6 text-blog-dary bg-white border border-blog-dary">后页</a></li>
+                {% endif %}
+               
+            </ul> 
+        </div>
+       
+    </div>
+    <!--右边栏 -->
+    <div class="w-full bg-white p-2 md:w-1/4 ">
+        <!--天气 -->
+       {% weather %}
+        <!--文章分类-->
+       {% include 'core/categories.html' %}
+
+        <!-- 最新文章 Latest posts-->
+       {% include 'core/latest-posts.html' %}
+
+       <!-- 热门文章 popular posts-->
+     {% display_most_commented_posts %}
+     
+        <!-- 热门标签 tags-->
+
+    {% display_tags %}
+
+
+    </div>
+  </main>
+
+{% endblock content %}
