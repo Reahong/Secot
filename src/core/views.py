@@ -162,13 +162,15 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
 
+    """ 调用api.ip138.com的接口 把获取到的Ip传入 然后解析成归属地 """
+
     r = requests.get(
         'https://api.ip138.com/ip/?ip=%s&datatype=jsonp&token=3a43af4d7d8dfc9e2f773ec56165c26a' % ip)
     if r.json()['ret'] == 'ok':
         i = r.json()['data']
-        country = i[0]
-        province = i[1]
-        city = i[2]
+        country = i[0]   # 国家
+        province = i[1]  # 省份
+        city = i[2]      # 城市
         checkip = country + ' ' + province + ' ' + city
 
     else:
@@ -181,7 +183,9 @@ def about(request):
     item = Profile.objects.get(id=1)
     item.hits += 1
     item.save()
-    return render(request, 'about.html', {"item": item})
+    le = Post.objects.count()
+
+    return render(request, 'about.html', {"item": item, "le": le})
 
 
 def login(request):

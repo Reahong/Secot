@@ -33,7 +33,7 @@
         <!--PC端 menu-->
         <div class="flex justify-between mx-4 md:mx-0">
             <div class="flex justify-between items-center">
-                <a class="mr-4 py-3" href="/"><img class="w-11 rounded-full"src="{% static 'img/login.jpg' %}" alt="Blog"></a>
+                <a class="mr-4 py-3" href="/"><img class="w-11 rounded-full"src="{% static 'img/lg.jpg' %}" alt="Blog"></a>
                 <span><a href="/">阿红的个人博客</a></span>
             </div> 
             <div class="hidden md:flex items-center space-x-5">
@@ -46,7 +46,7 @@
                 {% if request.session.username %}
                      <a class="py-5 px-3 block items-center h-full  text-blog-dary"href="{% url 'login' %}"><i class="fa-solid fa-circle-user px-1"></i>{{request.session.username}}</a>
                      <ul class="relative hidden">
-                        <li class=" bg-gray-100 px-4 py-2 row absolute  rounded-lg "><a class=" text-blog-dary hover:text-black "a href="{% url 'logout' %}">退出</a></li>
+                        <li class=" bg-gray-100 px-4 absolute   rounded-lg "><a class=" text-blog-dary hover:text-black "a href="{% url 'logout' %}">退出</a></li>
                     </ul>
                 {% else %}
                    
@@ -85,7 +85,12 @@
          <a class="block py-2 px-4 text-sm hover:bg-blog-dary hover:text-white"href="/">首页</a>
          <a class="block py-2 px-4 text-sm hover:bg-blog-dary hover:text-white"href="{% url 'posts' %}">博客日志</a>
          <a class="block py-2 px-4 text-sm hover:bg-blog-dary hover:text-white"href="{% url 'about' %}">关于我</a>
+         {% if request.session.username %}
+          <a class="block py-2 px-4 text-sm hover:bg-blog-dary hover:text-white"href="{% url 'login' %}">{{request.session.username}}</a> 
+          <a class="block py-2 px-4 text-sm hover:bg-blog-dary hover:text-white"href="{% url 'logout' %}">退出</a> 
+         {% else %}
          <a class="block py-2 px-4 text-sm hover:bg-blog-dary hover:text-white"href="{% url 'login' %}">登陆</a>
+         {% endif %}
         </div> 
     </nav>
     
@@ -119,7 +124,7 @@
             <div class="w-1/4">
                 <div class="flex items-center space-x-4 ">
                     <a href="/">
-                        <img class="w-16 rounded-full"src="{% static 'img/login.jpg'%}" alt="">
+                        <img class="w-16 rounded-full"src="{% static 'img/lg.jpg'%}" alt="">
                     </a>
                     <span>阿红的个人博客</span>
                 </div>

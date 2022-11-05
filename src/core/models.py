@@ -12,7 +12,7 @@ class Profile(models.Model):
     fullname = models.CharField('全名', max_length=20, blank=True)
     title = models.CharField('头衔', max_length=120, blank=True)
     avatar = models.ImageField(
-        '头像', default='avatars/login.jpg', upload_to='avatars')
+        '头像', default='avatars/lg.jpg', upload_to='avatars')
     phone = models.CharField('手机', max_length=50, blank=True)
     wechat = models.CharField('微信', max_length=50, blank=True)
     qq = models.CharField('QQ', max_length=50, blank=True)

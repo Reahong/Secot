@@ -5,6 +5,9 @@ from django_summernote.admin import SummernoteModelAdmin
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 
 # Register your models here.
+admin.site.site_header = '阿红个人博客管理后台'
+admin.site.site_title = '阿红个人博客管理后台'
+admin.site.index_title = '阿红个人博客管理后台'
 
 
 class PorfileAdmin(admin.ModelAdmin):

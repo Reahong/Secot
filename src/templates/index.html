@@ -11,7 +11,7 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
 
 {% endblock header %}
-{% block title %}RE的个人网站{% endblock title %}
+{% block title %}阿红的个人博客{% endblock title %}
 {% block keyswords %}RE,阿红的个人博客,Python,编程,Django,技术分享{% endblock keyswords %}
 {% block description %}RE,阿红,日常技术分享,Python,Django...{% endblock description %}
 {% block breadcrumb %}
@@ -65,7 +65,7 @@
                         <span class="text-blog-dary">{{item.author.profile.fullname}}</span>
                     </div>
                     <div class="flex space-x-4 py-1 px-1">
-                        <span><i class="fa-solid fa-thumbs-up"></i> 278</span>
+                       
                         <span><i class="fa fa-comment"></i> {{item.comments.all|length}}</span>
                         <span><i class="fa fa-eye"></i> {{item.views}}</span>
                     </div>
