@@ -14,4 +14,5 @@ def post_processors(request):
         "CATEGORIES": Category.objects.values('id', 'name').annotate(Count('posts')),
         "LATEST_POSTS": Post.published.all()[:5],
         "CHOSE_POSTS": Post.published.filter(flag=True).all()[:5],
+        "BLOGROLL": Blogroll.objects.all(),
     }

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Profile, Category, Post, SiteUser, ConfirmString, Comment, Slide
+from .models import Profile, Category, Post, SiteUser, ConfirmString, Comment, Slide, Blogroll
 from django_summernote.admin import SummernoteModelAdmin
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 
@@ -37,6 +37,11 @@ class SlideAdmin(admin.ModelAdmin):
     link_field = ('title',)
     list_editable = ('order',)
     ordering = ('-order', 'id')
+
+
+@admin.register(Blogroll)
+class BlogrollAdmin(admin.ModelAdmin):
+    list_display = ('title', 'link')
 
 
 @admin.register(Category)

@@ -174,3 +174,15 @@ class Slide(models.Model):
         ordering = ('-order', 'id')
         verbose_name = "首页轮播图"
         verbose_name_plural = "首页轮播图"
+
+
+class Blogroll(models.Model):
+    title = models.CharField('网站名称', max_length=120)
+    link = models.URLField('友情链接', max_length=120, blank=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "友情链接"
+        verbose_name_plural = "友情链接"
